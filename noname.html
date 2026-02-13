@@ -1,0 +1,191 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Birthday Surprise</title>  <!-- Fonts -->  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;800&family=Great+Vibes&display=swap" rel="stylesheet">  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: black;
+      color: gold;
+      overflow-x: hidden;
+    }
+
+    canvas#stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+    }
+
+    .hearts {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .heart {
+      position: absolute;
+      color: gold;
+      animation: floatUp 6s linear infinite;
+      font-size: 20px;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+    }
+
+    .enter-screen {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .enter-btn {
+      font-size: 2rem;
+      font-weight: 600;
+      color: gold;
+      padding: 30px 60px;
+      border: 4px solid gold;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .enter-btn:hover {
+      background: gold;
+      color: black;
+      transform: scale(1.1);
+    }
+
+    .main-page {
+      display: none;
+      padding: 40px 20px;
+      text-align: center;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-size: 3rem;
+      font-weight: normal;
+      margin-bottom: 20px;
+      color: gold;
+      font-family: 'Great Vibes', cursive;
+      letter-spacing: 2px;
+    }
+
+    .countdown {
+      font-size: 1.5rem;
+      margin-bottom: 40px;
+    }
+
+    .photo-box {
+      margin: 40px auto;
+      max-width: 300px;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: 1s ease;
+    }
+
+    .photo-box.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .photo-box img {
+      width: 100%;
+      border: 4px solid white;
+      border-radius: 15px;
+    }
+
+    .caption {
+      margin-top: 10px;
+      font-size: 1.1rem;
+      color: gold;
+    }
+  </style></head>
+<body><canvas id="stars"></canvas>
+
+<div class="hearts" id="hearts"></div><audio id="bgMusic" src="music.mp3" loop></audio>
+
+<div class="enter-screen" id="enterScreen">
+  <div class="enter-btn" onclick="enterSite()">ENTER</div>
+</div><div class="main-page" id="mainPage">
+  <h1>Happy Birthday Rimjhim</h1>
+  <div class="countdown" id="countdown"></div>
+  <div class="photo-box"><img src="photo1.jpg"><div class="caption"> Tor mukher hasi ta jeno sob somoy amon e thake. </div></div>
+  <div class="photo-box"><img src="photo2.jpg"><div class="caption">  Tor sathe proti ta moment amar jonne precious.✨</div></div>
+  <div class="photo-box"><img src="photo3.jpg"><div class="caption"> Ar sese ami sotti e thankfull amar life e asar jonno.💫</div></div>
+</div><script>
+function enterSite() {
+  document.getElementById('enterScreen').style.display = 'none';
+  document.getElementById('mainPage').style.display = 'block';
+  document.getElementById('bgMusic').play();
+  startCountdown();
+  revealPhotos();
+}
+
+function startCountdown() {
+  const birthday = new Date("2026-02-18 00:00:00").getTime();
+  setInterval(() => {
+    const now = new Date().getTime();
+    const gap = birthday - now;
+
+    const d = Math.floor(gap / (1000*60*60*24));
+    const h = Math.floor((gap%(1000*60*60*24))/(1000*60*60));
+    const m = Math.floor((gap%(1000*60*60))/(1000*60));
+    const s = Math.floor((gap%(1000*60))/1000);
+
+    document.getElementById('countdown').innerText = `${d}d ${h}h ${m}m ${s}s left`;
+  },1000);
+}
+
+function revealPhotos() {
+  document.querySelectorAll('.photo-box').forEach((p,i)=>{
+    setTimeout(()=>p.classList.add('show'), i*800);
+  });
+}
+
+setInterval(()=>{
+  const heart = document.createElement('div');
+  heart.className = 'heart';
+  heart.style.left = Math.random()*100 + 'vw';
+  heart.innerText = '❤';
+  document.getElementById('hearts').appendChild(heart);
+  setTimeout(()=>heart.remove(),6000);
+},500);
+
+const canvas = document.getElementById('stars');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const stars = Array.from({length:120},()=>({
+  x: Math.random()*canvas.width,
+  y: Math.random()*canvas.height,
+  r: Math.random()*1.5
+}));
+
+function drawStars(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle = 'white';
+  stars.forEach(s=>{
+    ctx.beginPath();
+    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+
+drawStars();
+</script></body>
+</html>
